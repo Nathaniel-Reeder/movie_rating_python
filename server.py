@@ -9,7 +9,6 @@ app = Flask(__name__)
 app.secret_key ='dev'
 app.jinja_env.undefined = StrictUndefined
 
-
 @app.route('/')
 def home():
     '''View homepage'''
@@ -25,11 +24,19 @@ def login():
     
     if user.password == password:
         session['user_id'] = user.id
+        session['logged_in'] = True
         flash('Logged in!')
         return redirect('/')
     else:
         flash('Sorry, there was a problem logging you in.')
         return redirect('/')
+
+@app.route('/logout')
+def logout():
+    session['logged_in'] = False
+    del session['user_id']
+    flash('Logged out!')
+    return redirect('/')
 
 @app.route('/movies')
 def all_movies():
@@ -77,6 +84,24 @@ def show_user(user_id):
     user = crud.get_user_by_id(user_id)
     
     return render_template('user_profile.html', user=user)
+
+@app.route('/add_rating/<movie_id>')
+def add_rating(movie_id):
+    '''Add a rating to the database'''
+    
+    score = request.form.get('score')
+    user_id = session['user_id']
+    
+    user = crud.get_user_by_id(user_id)
+    movie = crud.get_movie_by_id(movie_id)
+    
+    rating = crud.create_rating(user, movie, score)
+    
+    db.session.add(rating)
+    db.session.commit()
+    
+    flash('Thanks for adding a rating!')
+    return redirect(f'/movies/{movie_id}')
 
 if __name__ == "__main__":
     connect_to_db(app)

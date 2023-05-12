@@ -4,10 +4,25 @@
 
 {% block body %}
 <h1>{{ movie.title }}</h1>
-
+<img src="{{ movie.poster_path }}" id="poster">
 <p>
   {{ movie.overview }}
 </p>
 
-<img src="{{ movie.poster_path }}">
+{% if session['logged_in'] %}
+    <h3>Add A Rating for this movie!</h3>
+
+    <form action="/add_rating/{{movie.id}}">
+        <label for="score">Select a score for the movie:</label>
+        <select name="score" id="score">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+        <button type="submit">Submit</button>
+    </form>
+{% endif %}
+
 {% endblock %}

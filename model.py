@@ -19,6 +19,26 @@ class User(db.Model):
     def __repr__(self):
         return f'<User user_id={self.id} email={self.email}>'
     
+    @classmethod
+    def create(cls, email, password):
+        '''Create and return a new user'''
+        return cls(email=email, password=password)
+    
+    @classmethod
+    def get_all(cls):
+        '''Return all users in the database.'''
+        return cls.query.all()
+    
+    @classmethod
+    def get_by_id(cls, user_id):
+        '''Return a user object with the ID given in the parmeter'''
+        return cls.query.get(user_id)
+    
+    @classmethod
+    def get_by_email(cls, email):
+        '''Return a user object with the email given in the parameter'''
+        return cls.query.filter(cls.email == email).first()
+        
 class Movie(db.Model):
     '''A movie'''
     __tablename__ = 'movies'
@@ -33,6 +53,21 @@ class Movie(db.Model):
     
     def __repr__(self):
         return f'<Movie movie_id={self.id} title={self.title}>'
+    
+    @classmethod
+    def create(cls, title, overview, release_date, poster_path):
+        '''Create and return a new movie.'''
+        return cls(title=title, overview=overview, release_date=release_date, poster_path=poster_path)
+    
+    @classmethod
+    def get_all(cls):
+        '''Return all movies in the database.'''
+        return cls.query.all()
+    
+    @classmethod
+    def get_by_id(cls, movie_id):
+        '''Return a movie with a matching ID'''
+        return cls.query.get(movie_id)
 
 class Rating(db.Model):
     '''A rating'''
@@ -48,6 +83,15 @@ class Rating(db.Model):
     
     def __repr__(self):
         return f"<Rating rating_id={self.id} score={self.score}>"
+    
+    @classmethod
+    def create(cls, user, movie, score):
+        return cls(user=user, movie=movie, score=score)
+    
+    @classmethod
+    def get_all(cls):
+        '''Return all ratings in the database.'''
+        return cls.query.all()
 
 def connect_to_db(flask_app, echo=True):
     flask_app.config["SQLALCHEMY_DATABASE_URI"] = os.environ['POSTGRES_URI']

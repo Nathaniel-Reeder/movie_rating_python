@@ -26,6 +26,7 @@
       </p>
     </form>
   
+    {% if session['logged_in'] != True %}
     <h2>Log In</h2>
     <form action="/login" method="POST">
       <p>
@@ -40,5 +41,12 @@
         <input type="submit">
       </p>
     </form>
-    
+    {% endif %}
+
+    {% if session['logged_in'] %}
+        <form action="/logout">
+            <button type="submit">Log Out</button>
+        </form>
+    {% endif %}
+
 {% endblock %}

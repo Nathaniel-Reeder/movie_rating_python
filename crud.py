@@ -1,7 +1,7 @@
 '''CRUD operations'''
 from model import db, User, Movie, Rating, connect_to_db
 
-#Functions begin here
+# User functions
 
 def create_user(email, password):
     """Create and return a new user."""
@@ -22,6 +22,8 @@ def get_user_by_email(email):
     '''Return the user with the email given in the parameter'''
     return User.query.filter(User.email == email).first()
 
+
+# Movie functions
 def create_movie(title, overview, release_date, poster_path):
     '''Create and return a new movie.'''
     
@@ -37,6 +39,8 @@ def get_movie_by_id(movie_id):
     '''Return a movie with the id given in the parameter'''
     return Movie.query.get(movie_id)
 
+
+# Rating functions
 def create_rating(user, movie, score):
     '''Create and return a new rating'''
     rating = Rating(user=user, movie=movie, score=score)
